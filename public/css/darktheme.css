@@ -10,5 +10,13 @@ h5,
 h6,
 label,
 p {
-  color: #42b983;
+  color: #007bff;
+}
+
+.heading-dark {
+  color: black;
+}
+
+.title-dark {
+  color: white;
 }

@@ -16,6 +16,9 @@
               >
             </li>
           </ul>
+          <h4 class="display-5 heading-dark">
+            Vue and Node Signup, Signin, Signout features
+          </h4>
         </div>
       </div>
     </nav>

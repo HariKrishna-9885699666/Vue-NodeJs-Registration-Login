@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <h2 align="center">Register</h2>
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm" id="registrationForm">
       <div class="form-group">
         <label for="exampleInputEmail1">First Name</label>
         <input
@@ -64,7 +64,19 @@
           class="form-control"
           id="password"
           placeholder="Password"
+          v-model.trim="$v.password.$model"
         />
+        <span class="error" v-if="!$v.password.required && $v.password.$error"
+          >Password is required</span
+        >
+        <span class="error" v-if="!$v.password.minLength && $v.password.$error"
+          >Password must have atleast
+          {{ $v.password.$params.minLength.min }} letters</span
+        >
+        <span class="error" v-if="!$v.password.maxLength && $v.password.$error"
+          >Password must be of max length
+          {{ $v.password.$params.maxLength.max }} letters</span
+        >
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Confirm Password</label>
@@ -73,7 +85,13 @@
           class="form-control"
           id="cpassword"
           placeholder="Confirm Password"
+          v-model.trim="$v.cpassword.$model"
         />
+        <span
+          class="error"
+          v-if="!$v.cpassword.confirmPassword && $v.cpassword.$error"
+          >Password and Confirm passwords must be same</span
+        >
       </div>
 
       <button type="submit" class="btn btn-primary">Submit</button>
@@ -82,11 +100,14 @@
 </template>
 
 <script>
+import Vue from "vue";
+import axios from "axios";
 import {
   required,
   minLength,
   maxLength,
   email,
+  sameAs,
 } from "vuelidate/lib/validators";
 export default {
   data() {
@@ -119,13 +140,54 @@ export default {
         return emailRegex.test(value);
       },
     },
+    password: {
+      required,
+      minLength: minLength(6),
+      maxLength: maxLength(10),
+    },
+    cpassword: {
+      confirmPassword: sameAs("password"),
+    },
   },
   methods: {
-    submitForm() {
+    submitForm: function(event) {
       this.$v.$touch();
-      // if (this.$v.$invalid) {
+      if (this.$v.$pending || this.$v.$error) return;
+      const userRegisterRequest = {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        password: this.password,
+      };
 
-      //   }
+      axios
+        .post(
+          `https://nodejs-signup-signin-apis.herokuapp.com/api/v1/register`,
+          {
+            ...userRegisterRequest,
+          }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            Vue.$toast.open({
+              message: "Registration successful",
+              type: "success",
+              position: "top-right",
+            });
+
+            event.target.reset();
+          }
+        })
+        .catch((error) => {
+          Vue.$toast.open({
+            message:
+              error.response?.data?.error ||
+              error.response?.data?.message ||
+              error?.message,
+            type: "error",
+            position: "top-right",
+          });
+        });
     },
   },
 };
@@ -135,7 +197,7 @@ export default {
 .register {
   width: 500px;
   position: absolute;
-  top: 35%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-weight: 700;

@@ -12,7 +12,9 @@
         checked=""
         @click="darkThemeSwitch"
       />
-      <label class="custom-control-label" for="customSwitch1">Dark Mode</label>
+      <label class="custom-control-label title-dark" for="customSwitch1"
+        >Dark Mode</label
+      >
     </div>
   </div>
 </template>
