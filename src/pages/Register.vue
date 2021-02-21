@@ -153,6 +153,8 @@ export default {
     submitForm: function(event) {
       this.$v.$touch();
       if (this.$v.$pending || this.$v.$error) return;
+
+      let loader = this.$loading.show({});
       const userRegisterRequest = {
         firstName: this.firstName,
         lastName: this.lastName,
@@ -176,6 +178,8 @@ export default {
             });
 
             event.target.reset();
+            loader.hide();
+            this.$router.push({ name: "login" });
           }
         })
         .catch((error) => {
@@ -187,6 +191,7 @@ export default {
             type: "error",
             position: "top-right",
           });
+          loader.hide();
         });
     },
   },
@@ -197,7 +202,7 @@ export default {
 .register {
   width: 500px;
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-weight: 700;

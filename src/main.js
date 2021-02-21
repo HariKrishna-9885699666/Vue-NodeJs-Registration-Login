@@ -11,6 +11,8 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 import Vuelidate from "vuelidate";
 import VueToast from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 Vue.config.productionTip = false;
 
@@ -23,6 +25,7 @@ Vue.use(IconsPlugin);
 
 Vue.use(Vuelidate);
 Vue.use(VueToast);
+Vue.use(Loading);
 
 new Vue({
   render: (h) => h(App),
