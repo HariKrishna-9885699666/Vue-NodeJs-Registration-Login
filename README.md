@@ -1,6 +1,6 @@
 # Vue-NodeJs-Registration-Login
 
-Vue and Node Signup, Signin, Signout features
+User Signup, Signin and Signout is implemented in Vuejs and NodeJs using JsonWebToken
 
 ## Project setup
 

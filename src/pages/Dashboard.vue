@@ -1,8 +1,15 @@
 <template>
   <div class="dashboard">
-    <h2 align="center">Dashboard</h2>
+    <h2 align="center" v-if="loggedInUserName">Hi, {{ loggedInUserName }}</h2>
   </div>
 </template>
+
+<script>
+export default {
+  name: "Dashboard",
+  props: ["loggedInUserName"],
+};
+</script>
 
 <style>
 .dashboard {

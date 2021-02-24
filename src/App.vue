@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header :isUserLoggedIn="isUserLoggedIn"></Header>
     <div class="container">
-      <router-view></router-view>
+      <router-view :loggedInUserName="loggedInUserName"></router-view>
     </div>
     <div class="custom-control custom-switch">
       <input
@@ -32,12 +32,25 @@ import Header from "./components/includes/Header.vue";
 export default {
   name: "App",
   data() {
-    return {};
+    return {
+      loggedInUserName: null,
+      isUserLoggedIn: false,
+    };
+  },
+  async created() {
+    this._getUser();
+  },
+  async updated() {
+    this._getUser();
   },
   components: {
     Header,
   },
   methods: {
+    _getUser() {
+      this.loggedInUserName = JSON.parse(localStorage.getItem("user"))?.name;
+      this.isUserLoggedIn = this.loggedInUserName ? true : false;
+    },
     _addDarkTheme() {
       let darkThemeLinkEl = document.createElement("link");
       darkThemeLinkEl.setAttribute("rel", "stylesheet");

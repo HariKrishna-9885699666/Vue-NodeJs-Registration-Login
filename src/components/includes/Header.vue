@@ -7,20 +7,43 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/">Home</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="isUserLoggedIn">
+              <router-link class="nav-link" to="/dashboard"
+                >Dashboard</router-link
+              >
+            </li>
+            <li class="nav-item" v-if="!isUserLoggedIn">
               <router-link class="nav-link" to="/login">Login</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="!isUserLoggedIn">
               <router-link class="nav-link" to="/register"
                 >Register</router-link
               >
             </li>
+            <li class="nav-item" v-if="isUserLoggedIn">
+              <router-link
+                class="nav-link"
+                to="/dashboard"
+                @click.native="handleLogout"
+                >Logout</router-link
+              >
+            </li>
           </ul>
-          <h4 class="display-5 heading-dark">
-            Vue and Node Signup, Signin, Signout features
-          </h4>
         </div>
       </div>
     </nav>
   </div>
 </template>
+
+<script>
+export default {
+  name: "Header",
+  props: ["isUserLoggedIn"],
+  methods: {
+    handleLogout() {
+      localStorage.clear();
+      this.$router.push("/");
+    },
+  },
+};
+</script>

@@ -58,8 +58,8 @@ import {
 export default {
   data() {
     return {
-      email: "",
-      password: "",
+      email: "anemharikrishna@gmail.com",
+      password: "123456",
     };
   },
   validations: {
@@ -80,37 +80,44 @@ export default {
     },
   },
   methods: {
-    submitForm: function() {
+    submitForm: async function() {
       this.$v.$touch();
       if (this.$v.$pending || this.$v.$error) return;
 
-      let loader = this.$loading.show({});
+      const loader = this.$loading.show({});
       const userLoginRequest = {
         username: this.email,
         password: this.password,
       };
+      try {
+        const response = await axios.post(`login`, { ...userLoginRequest });
+        if (response?.data?.success) {
+          loader.hide();
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              email: response.data.data.data.email,
+              name: response.data.data.data.name,
+            })
+          );
+          localStorage.setItem("jwt", response.headers.authtoken);
 
-      axios
-        .post(`https://nodejs-signup-signin-apis.herokuapp.com/api/v1/login`, {
-          ...userLoginRequest,
-        })
-        .then((response) => {
-          if (response.data.success) {
-            loader.hide();
+          if (localStorage.getItem("jwt") != null) {
+            this.$emit("loggedIn", true);
             this.$router.push({ name: "dashboard" });
           }
-        })
-        .catch((error) => {
-          Vue.$toast.open({
-            message:
-              error.response?.data?.error ||
-              error.response?.data?.message ||
-              error?.message,
-            type: "error",
-            position: "top-right",
-          });
-          loader.hide();
+        }
+      } catch (error) {
+        Vue.$toast.open({
+          message:
+            error.response?.data?.error ||
+            error.response?.data?.message ||
+            error?.message,
+          type: "error",
+          position: "top-right",
         });
+        loader.hide();
+      }
     },
   },
 };

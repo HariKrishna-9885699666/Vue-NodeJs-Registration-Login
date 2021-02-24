@@ -150,7 +150,7 @@ export default {
     },
   },
   methods: {
-    submitForm: function(event) {
+    submitForm: async function(event) {
       this.$v.$touch();
       if (this.$v.$pending || this.$v.$error) return;
 
@@ -161,38 +161,32 @@ export default {
         email: this.email,
         password: this.password,
       };
-
-      axios
-        .post(
-          `https://nodejs-signup-signin-apis.herokuapp.com/api/v1/register`,
-          {
-            ...userRegisterRequest,
-          }
-        )
-        .then((response) => {
-          if (response.data.success) {
-            Vue.$toast.open({
-              message: "Registration successful",
-              type: "success",
-              position: "top-right",
-            });
-
-            event.target.reset();
-            loader.hide();
-            this.$router.push({ name: "login" });
-          }
-        })
-        .catch((error) => {
+      try {
+        const response = await axios.post(`register`, {
+          ...userRegisterRequest,
+        });
+        if (response?.data?.success) {
           Vue.$toast.open({
-            message:
-              error.response?.data?.error ||
-              error.response?.data?.message ||
-              error?.message,
-            type: "error",
+            message: "Registration successful",
+            type: "success",
             position: "top-right",
           });
+
+          event.target.reset();
           loader.hide();
+          this.$router.push({ name: "login" });
+        }
+      } catch (error) {
+        Vue.$toast.open({
+          message:
+            error.response?.data?.error ||
+            error.response?.data?.message ||
+            error?.message,
+          type: "error",
+          position: "top-right",
         });
+        loader.hide();
+      }
     },
   },
 };

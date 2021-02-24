@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import VueRouter from "vue-router";
 import router from "./router.js";
+import "./axios.js";
 
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
