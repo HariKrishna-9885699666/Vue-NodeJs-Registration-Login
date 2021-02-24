@@ -58,8 +58,8 @@ import {
 export default {
   data() {
     return {
-      email: "anemharikrishna@gmail.com",
-      password: "123456",
+      email: "",
+      password: "",
     };
   },
   validations: {
