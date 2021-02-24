@@ -86,4 +86,7 @@ export default {
   transform: translate(-50%, -50%);
   font-weight: 700;
 }
+.navbar {
+  z-index: 1;
+}
 </style>
